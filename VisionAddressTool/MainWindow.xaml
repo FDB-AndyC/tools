@@ -1,0 +1,63 @@
+﻿<Window x:Class="VisionAddressTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.galasoft.ch/ignore"
+        mc:Ignorable="d ignore"
+        Height="300"
+        Width="435"
+        Title="Vision address tool"
+        DataContext="{Binding MainVM, Source={StaticResource Locator}}"
+        Background="#1e1e1e"
+        Foreground="AntiqueWhite">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <DockPanel LastChildFill="True" >
+        <Grid x:Name="LayoutRoot" DockPanel.Dock="Top">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Label}" BasedOn="{StaticResource RightAlignedLabelStyle}" >
+                    <Setter Property="Margin" Value="0 0 10 0" />
+                </Style>
+            </Grid.Resources>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="20"/>
+                <RowDefinition Height="*" MinHeight="20"/>
+                <RowDefinition Height="*" MinHeight="20"/>
+                <RowDefinition Height="Auto" MinHeight="20"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="1" Grid.Column="0" 
+                   Content="Patient Id:" />
+            
+            <TextBox Grid.Row="1" Grid.Column="1" 
+                     Text="{Binding PatientId}" 
+                     Margin="0 0 20 0"/>
+            
+            <Button Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" 
+                    Command="{Binding QueryCommand}"
+                    Content="Query" 
+                    HorizontalAlignment="Center" 
+                    Margin="5" 
+                    Padding="15 3"/>
+        </Grid>
+        
+        <TextBox Text="{Binding QueryOutput}" 
+                 TextWrapping="Wrap" 
+                 FontFamily="Courier New"
+                 FontSize="9pt"/>
+    </DockPanel>
+</Window>
