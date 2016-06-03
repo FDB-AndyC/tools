@@ -50,7 +50,8 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            sb.Append("p.entity_id, p.surname, p.forename1, p.nhs_no, p.sex as sexcode, p.dob, p.title, p.reg_gp, p.usual_gp ");
+            //sb.Append("p.entity_id, p.surname, p.forename1, p.nhs_no, p.sex as sexcode, p.dob, p.title, p.reg_gp, p.usual_gp ");
+            sb.Append("* ");
             sb.Append("FROM patient AS p ");
 
             sb.Append($"WHERE p.entity_id = {this.cachedPatientId}");
@@ -63,7 +64,8 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            sb.Append("eth.read_term AS ethnicity ");
+            //sb.Append("eth.read_term AS ethnicity ");
+            sb.Append("* ");
             sb.Append("FROM ethnicity AS eth ");
 
             sb.Append($"WHERE eth.master_id = {this.cachedPatientId}");
@@ -76,7 +78,8 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            sb.Append("add.house_name, add.house_no, add.road_name, add.local_name, add.town_name, add.county_nam, add.postcode ");
+            //sb.Append("add.house_name, add.house_no, add.road_name, add.local_name, add.town_name, add.county_nam, add.postcode ");
+            sb.Append("* ");
             sb.Append("FROM newadd AS add ");
             sb.Append($"WHERE add.master_id = {this.cachedPatientId}");
 
