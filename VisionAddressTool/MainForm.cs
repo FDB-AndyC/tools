@@ -1,4 +1,13 @@
-﻿namespace VisionAddressTool_fw35
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MainForm.cs" company="First Databank">
+//   Copyright (c) 2016 First Databank. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the MainForm type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VisionAddressTool
 {
     using System;
     using System.Drawing;

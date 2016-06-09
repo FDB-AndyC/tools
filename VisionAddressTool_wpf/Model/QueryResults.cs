@@ -7,7 +7,5 @@
         public string AddressOutput { get; set; }
 
         public string EthnicityOutput { get; set; }
-
-        public string JoinedOutput { get; set; }
     }
 }

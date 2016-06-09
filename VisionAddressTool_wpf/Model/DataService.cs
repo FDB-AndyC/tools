@@ -32,14 +32,12 @@
                 {
                     AddressOutput = this.GetAddressOutput(),
                     EthnicityOutput = this.GetEthnicityOutput(),
-                    PatientOutput = this.GetPatientOutput(),
-                    JoinedOutput = this.GetJoinedOutput()
+                    PatientOutput = this.GetPatientOutput()
                 };
             }
             catch (Exception x)
             {
                 error = x;
-                this.Disconnect();
             }
 
             callback(results, error);
@@ -50,8 +48,7 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            //sb.Append("p.entity_id, p.surname, p.forename1, p.nhs_no, p.sex as sexcode, p.dob, p.title, p.reg_gp, p.usual_gp ");
-            sb.Append("* ");
+            sb.Append("p.entity_id, p.surname, p.forename1, p.nhs_no, p.sex as sexcode, p.dob, p.title, p.reg_gp, p.usual_gp ");
             sb.Append("FROM patient AS p ");
 
             sb.Append($"WHERE p.entity_id = {this.cachedPatientId}");
@@ -64,8 +61,7 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            //sb.Append("eth.read_term AS ethnicity ");
-            sb.Append("* ");
+            sb.Append("eth.read_term AS ethnicity ");
             sb.Append("FROM ethnicity AS eth ");
 
             sb.Append($"WHERE eth.master_id = {this.cachedPatientId}");
@@ -78,25 +74,9 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            //sb.Append("add.house_name, add.house_no, add.road_name, add.local_name, add.town_name, add.county_nam, add.postcode ");
-            sb.Append("* ");
+            sb.Append("add.house_name, add.house_no, add.road_name, add.local_name, add.town_name, add.county_nam, add.postcode ");
             sb.Append("FROM newadd AS add ");
             sb.Append($"WHERE add.master_id = {this.cachedPatientId}");
-
-            return this.ProcessData(sb.ToString());
-        }
-
-        private string GetJoinedOutput()
-        {
-            var sb = new StringBuilder();
-
-            sb.Append("SELECT ");
-            sb.Append("add.house_name, add.house_no, add.road_name, add.local_name, add.town_name, add.county_nam, add.postcode, ");
-            sb.Append("p.entity_id, p.surname, p.forename1, p.nhs_no, p.sex as sexcode, p.dob, p.title, p.reg_gp, p.usual_gp, eth.read_term AS ethnicity ");
-            sb.Append("FROM patient AS p ");
-            sb.Append("INNER JOIN newadd AS add ON add.master_id = p.entity_id ");
-            sb.Append("LEFT JOIN ethnicity AS eth ON eth.master_id = p.entity_id AND eth.auditflag = 1 ");
-            sb.Append($"WHERE p.auditflag = 1 AND add.auditflag = 1 AND add.master_ty = 1 AND p.entity_id = {this.cachedPatientId}");
 
             return this.ProcessData(sb.ToString());
         }
@@ -131,11 +111,6 @@
         }
 
         public void Dispose()
-        {
-            this.Disconnect();
-        }
-
-        private void Disconnect()
         {
             if (this.connection != null)
             {

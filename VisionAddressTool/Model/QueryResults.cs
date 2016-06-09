@@ -1,4 +1,13 @@
-﻿namespace VisionAddressTool.Model
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="QueryResults.cs" company="First Databank">
+//   Copyright (c) 2016 First Databank. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the QueryResults type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VisionAddressTool.Model
 {
     public class QueryResults
     {
@@ -7,5 +16,7 @@
         public string AddressOutput { get; set; }
 
         public string EthnicityOutput { get; set; }
+
+        public string JoinedOutput { get; set; }
     }
 }

@@ -1,6 +1,15 @@
-﻿namespace VisionAddressTool_fw35
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MainForm.Designer.cs" company="First Databank">
+//   Copyright (c) 2016 First Databank. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the MainForm type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VisionAddressTool
 {
-    partial class MainForm
+    public partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -13,9 +22,9 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && (this.components != null))
             {
-                components.Dispose();
+                this.components.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -1,4 +1,13 @@
-﻿namespace VisionAddressTool.Model
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CsvDataConverter.cs" company="First Databank">
+//   Copyright (c) 2016 First Databank. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the CsvDataConverter type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace VisionAddressTool.Model
 {
     using System.Data;
     using System.Text;
@@ -19,23 +28,32 @@
                 sb.Append(GetQuotedText(column.ColumnName));
             }
 
-            foreach (DataRow row in table.Rows)
+            if (table.Rows?.Count > 0)
             {
-                var isCommandNeeded = false;
-
-                foreach (DataColumn column in table.Columns)
+                foreach (DataRow row in table.Rows)
                 {
-                    if (isCommandNeeded)
-                    {
-                        sb.Append(",");
-                    }
-                    else
-                    {
-                        isCommandNeeded = true;
-                    }
+                    var isCommaNeeded = false;
 
-                    sb.Append(GetQuotedText(row[column.ColumnName]?.ToString() ?? string.Empty));
+                    sb.AppendLine();
+                    foreach (DataColumn column in table.Columns)
+                    {
+                        if (isCommaNeeded)
+                        {
+                            sb.Append(",");
+                        }
+                        else
+                        {
+                            isCommaNeeded = true;
+                        }
+
+                        sb.Append(GetQuotedText(row[column.ColumnName]?.ToString() ?? string.Empty));
+                    }
                 }
+            }
+            else
+            {
+                sb.AppendLine();
+                sb.Append("(no rows)");
             }
 
             return sb.ToString();
@@ -43,23 +61,7 @@
 
         private static string GetQuotedText(string text)
         {
-            return $"\"{text}\"";
+            return text == null ? "(NULL)" : $"\"{text}\"";
         }
-
-        //private static string OutputLine(IEnumerable<string> cells)
-        //{
-        //    var sb = new StringBuilder();
-
-        //    foreach (var cell in cells)
-        //    {
-        //        if (sb.Length > 0)
-        //        {
-        //            sb.Append(",");
-        //        }
-        //        sb.Append($"\"{cell}\"");
-        //    }
-
-        //    return sb.ToString();
-        //}
     }
 }
