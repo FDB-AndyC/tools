@@ -7,14 +7,13 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace VisionAddressTool
+namespace FDB.VisionQueryTool
 {
     using System;
     using System.Windows.Forms;
 
-    using VisionAddressTool.Model;
-
-    using VisionAddressTool_fw35;
+    using FDB.VisionQueryTool.Forms;
+    using FDB.VisionQueryTool.Model;
 
     public static class Program
     {

@@ -7,41 +7,34 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace VisionAddressTool
+namespace FDB.VisionQueryTool.Forms
 {
     using System;
+    using System.Diagnostics;
     using System.Drawing;
     using System.Windows.Forms;
 
-    using VisionAddressTool.Model;
+    using FDB.VisionQueryTool.Factories;
+    using FDB.VisionQueryTool.Model;
 
     public partial class MainForm : Form
     {
-        private readonly IDataService _dataService;
+        private readonly IDataService dataService;
+
+        private QueryForm queryForm;
 
         private int PatientId => int.Parse(this.PatientIdTextBox.Text);
 
         public MainForm(IDataService dataService)
         {
-            this._dataService = dataService;
+            this.dataService = dataService;
             this.InitializeComponent();
-        }
-
-        private void QueryButton_Click(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.WaitCursor;
-            var start = DateTime.UtcNow;
-
-            this.ExecuteQuery();
-
-            var epoch = DateTime.UtcNow - start;
-            this.AppendOutput($"Query({this.PatientId}) took {epoch.TotalMilliseconds}ms");
-            this.Cursor = Cursors.Default;
+            this.queryForm = new QueryForm(dataService);
         }
 
         private void ExecuteQuery()
         {
-            this._dataService.GetData(
+            this.dataService.GetPatientData(
                 this.PatientId,
                 (results, error) =>
                 {
@@ -57,7 +50,6 @@ namespace VisionAddressTool
                     }
                 });
         }
-
 
         private void PopulateResults(QueryResults results)
         {
@@ -98,12 +90,53 @@ namespace VisionAddressTool
             this.OutputTextBox.AppendText(message ?? string.Empty);
         }
 
-        private void PatientIdTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void PatientIdTextBoxValidating(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var me = sender as TextBox;
             int value;
             e.Cancel = !int.TryParse(me?.Text, out value);
             this.QueryButton.Enabled = !e.Cancel;
+        }
+
+        private void QueryButtonClick(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            var start = DateTime.UtcNow;
+
+            this.ExecuteQuery();
+
+            var epoch = DateTime.UtcNow - start;
+            this.AppendOutput($"Query({this.PatientId}) took {epoch.TotalMilliseconds}ms");
+            this.Cursor = Cursors.Default;
+        }
+
+        private void ExitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void MainFormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.queryForm.ForceClose();
+        }
+
+        private void MainFormClosed(object sender, FormClosedEventArgs e)
+        {
+            Debug.WriteLine("Application exiting");
+            Application.Exit();
+        }
+
+        private void QueryToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            this.queryForm.Show(this);
+        }
+
+        private void DummyDataToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var dummyService = new DummyDataService();
+            var dummyResults = dummyService.Execute("blah");
+
+            ResultsFormFactory.Generate(this, dummyResults);
         }
     }
 }

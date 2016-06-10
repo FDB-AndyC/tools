@@ -1,4 +1,13 @@
-﻿namespace VisionAddressTool.Model
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DataService.cs" company="First Databank">
+//   Copyright (c) 2016 First Databank. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the DataService type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace FDB.VisionQueryTool.Model
 {
     using System;
     using System.Data;
@@ -11,15 +20,12 @@
         private const int InvalidPatientId = -1;
 
         private OleDbConnection connection;
-        private OleDbCommand command;
-        private OleDbDataAdapter adapter;
-        private DataSet dataSet;
 
         private int cachedPatientId = InvalidPatientId;
 
         private bool IsConnected => this.connection != null;
 
-        public void GetData(int patientId, Action<QueryResults, Exception> callback)
+        public void GetPatientData(int patientId, Action<QueryResults, Exception> callback)
         {
             QueryResults results = null;
             Exception error = null;
@@ -50,10 +56,8 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            //sb.Append("p.entity_id, p.surname, p.forename1, p.nhs_no, p.sex as sexcode, p.dob, p.title, p.reg_gp, p.usual_gp ");
             sb.Append("* ");
             sb.Append("FROM patient AS p ");
-
             sb.Append($"WHERE p.entity_id = {this.cachedPatientId}");
 
             return this.ProcessData(sb.ToString());
@@ -64,10 +68,8 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            //sb.Append("eth.read_term AS ethnicity ");
             sb.Append("* ");
             sb.Append("FROM ethnicity AS eth ");
-
             sb.Append($"WHERE eth.master_id = {this.cachedPatientId}");
 
             return this.ProcessData(sb.ToString());
@@ -78,7 +80,6 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            //sb.Append("add.house_name, add.house_no, add.road_name, add.local_name, add.town_name, add.county_nam, add.postcode ");
             sb.Append("* ");
             sb.Append("FROM newadd AS add ");
             sb.Append($"WHERE add.master_id = {this.cachedPatientId}");
@@ -105,10 +106,6 @@
         {
             this.connection = new OleDbConnection { ConnectionString = VisionConnectionString };
             this.connection.Open();
-
-            this.command = new OleDbCommand { CommandType = CommandType.Text, Connection = this.connection };
-            this.adapter = new OleDbDataAdapter { SelectCommand = this.command };
-            this.dataSet = new DataSet();
         }
 
         private void EnsureConnected()
@@ -121,13 +118,22 @@
 
         private string ProcessData(string sql)
         {
-            this.command.CommandType = CommandType.Text;
-            this.command.CommandText = sql;
-            this.dataSet = new DataSet();
+            return CsvDataConverter.ToCsv(this.Execute(sql).Tables[0]);
+        }
 
-            this.adapter.Fill(this.dataSet);
+        public DataSet Execute(string sql)
+        {
+            var data = new DataSet();
 
-            return CsvDataConverter.ToCsv(this.dataSet.Tables[0]);
+            this.EnsureConnected();
+
+            using (var command = new OleDbCommand { CommandType = CommandType.Text, Connection = this.connection, CommandText = sql })
+            using (var adapter = new OleDbDataAdapter { SelectCommand = command })
+            {
+                adapter.Fill(data);
+            }
+
+            return data;
         }
 
         public void Dispose()
@@ -149,45 +155,6 @@
                 }
 
                 this.connection = null;
-            }
-
-            if (this.adapter != null)
-            {
-                try
-                {
-                    this.adapter.Dispose();
-                }
-                catch (Exception)
-                {
-                }
-
-                this.adapter = null;
-            }
-
-            if (this.command != null)
-            {
-                try
-                {
-                    this.command.Dispose();
-                }
-                catch (Exception)
-                {
-                }
-
-                this.command = null;
-            }
-
-            if (this.dataSet != null)
-            {
-                try
-                {
-                    this.dataSet.Dispose();
-                }
-                catch (Exception)
-                {
-                }
-
-                this.dataSet = null;
             }
         }
     }

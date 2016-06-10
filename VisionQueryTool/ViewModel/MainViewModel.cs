@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace VisionAddressTool.ViewModel
+namespace FDB.VisionQueryTool.ViewModel
 {
     public class MainViewModel
     {

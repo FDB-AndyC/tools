@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace VisionAddressTool.Model
+namespace FDB.VisionQueryTool.Model
 {
     public class QueryResults
     {
