@@ -25,7 +25,7 @@ namespace FDB.VisionQueryTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm(new DataService()));
+            Application.Run(new QueryForm(new DataService()));
         }
     }
 }
